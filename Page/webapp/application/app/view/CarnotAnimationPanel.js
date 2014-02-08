@@ -33,44 +33,79 @@ Ext.define('CE.view.CarnotAnimationPanel', {
                     }
                 },
                 {
-                    xtype : 'panel',
-                    title : 'Measurements',
-                    anchor: '100% 40%',
-                    items : [
+                    xtype     : 'grid',
+                    title     : 'Measurements',
+                    itemId    : 'measurementsGrid',
+                    height    : 250,
+                    autoScroll: true,
+                    border    : true,
+                    store     : Ext.StoreManager.lookup('mStore'),
+                    columns   : [
                         {
-                            xtype     : 'grid',
-                            itemId    : 'measurementsGrid',
-                            autoScroll: true,
-                            store     : Ext.StoreManager.lookup('measurementsStore'),
-                            columns   : [
-                                {
-                                    text     : 'PK',
-                                    dataIndex: 'number',
-                                    width    : 50,
-                                    sortable : false,
-                                    filter   : false
-                                },
-                                {
-                                    text     : 'T1',
-                                    dataIndex: 't1',
-                                    width    : 50,
-                                    sortable : false,
-                                    filter   : false
-                                },
-                                {
-                                    text     : 'T2',
-                                    dataIndex: 't2',
-                                    width    : 50,
-                                    sortable : false,
-                                    filter   : false
-                                },
-                                {
-                                    text     : 'Faza',
-                                    dataIndex: 'phase',
-                                    sortable : false,
-                                    filter   : false
-                                }
-                            ]
+                            text     : 'T1',
+                            dataIndex: 'th',
+                            width    : 75,
+                            sortable : false,
+                            filter   : false,
+                            renderer : function (value) {
+                                return CE.constants.RenderFunctions.renderAsValue(value);
+                            }
+                        },
+                        {
+                            text     : 'T2',
+                            dataIndex: 'tl',
+                            width    : 75,
+                            sortable : false,
+                            filter   : false,
+                            renderer : function (value) {
+                                return CE.constants.RenderFunctions.renderAsValue(value);
+                            }
+                        },
+                        {
+                            text     : 'W',
+                            dataIndex: 'work',
+                            width    : 120,
+                            sortable : false,
+                            filter   : false,
+                            renderer : function (value) {
+                                return CE.constants.RenderFunctions.renderAsValue(value);
+                            }
+                        },
+                        {
+                            text     : 'H',
+                            dataIndex: 'heat',
+                            width    : 120,
+                            sortable : false,
+                            filter   : false,
+                            renderer : function (value) {
+                                return CE.constants.RenderFunctions.renderAsValue(value);
+                            }
+                        },
+                        {
+                            text     : '&#916;U',
+                            dataIndex: 'dU',
+                            width    : 75,
+                            sortable : false,
+                            filter   : false,
+                            renderer : function (value) {
+                                return CE.constants.RenderFunctions.renderAsValue(value);
+                            }
+                        },
+                        {
+                            text     : '&#916;H',
+                            dataIndex: 'dH',
+                            width    : 75,
+                            sortable : false,
+                            filter   : false,
+                            renderer : function (value) {
+                                return CE.constants.RenderFunctions.renderAsValue(value);
+                            }
+                        },
+                        {
+                            text     : 'Faza',
+                            dataIndex: 'phase',
+                            sortable : false,
+                            filter   : false
                         }
                     ]
                 }

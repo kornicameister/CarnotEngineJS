@@ -37,15 +37,28 @@ Ext.define('CE.view.form.CarnotFormPanel', {
             ]
         },
         {
+            fieldLabel: 'Engine',
+            items     : [
+                {
+                    name      : 'volume1',
+                    fieldLabel: 'Volume 1 (m3)',
+                    minValue  : 0.01,
+                    maxValue  : 1
+                },
+                {
+                    name      : 'volume2',
+                    fieldLabel: 'Volume 2 (m3)',
+                    minValue  : 0.01,
+                    maxValue  : 1
+                }
+            ]
+        },
+        {
             fieldLabel: 'Ideal gas properties',
             items     : [
                 {
                     name      : 'mols',
                     fieldLabel: 'Mols (n)'
-                },
-                {
-                    name      : 'volume',
-                    fieldLabel: 'Volume (v)'
                 },
                 {
                     name      : 'pressure',

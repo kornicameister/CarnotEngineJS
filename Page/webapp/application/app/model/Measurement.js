@@ -2,16 +2,11 @@ Ext.define('CE.model.Measurement', {
     extend: 'Ext.data.Model',
     fields: [
         {
-            name: 'number',
-            type: 'number',
-            min : 1
-        },
-        {
-            name: 't1',
+            name: 'th',
             type: 'number'
         },
         {
-            name: 't2',
+            name: 'tl',
             type: 'number'
         },
         {
@@ -25,14 +20,17 @@ Ext.define('CE.model.Measurement', {
         {
             name: 'heat',
             type: 'number'
+        },
+        {
+            name: 'dU',
+            type: 'number'
+        },
+        {
+            name: 'dH',
+            type: 'number'
         }
     ],
     proxy : {
-        type    : 'memory',
-        autoLoad: false,
-        reader  : {
-            type: 'json',
-            root: 'measurements'
-        }
+        type: 'memory'
     }
 });

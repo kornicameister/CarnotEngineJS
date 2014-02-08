@@ -3,8 +3,10 @@ Ext.define('CE.constants.Carnot', {
     th             : 0,
     tl             : 0,
     mols           : 0,
-    volume         : 0,
+    volume1        : 0,
+    volume2        : 0,
     pressure       : 0,
+    compression    : 0,
     convertToKelvin: function (temp) {
         if (!Ext.isNumber(temp)) {
             temp = Ext.Number.from(temp);

@@ -1,10 +1,12 @@
 Ext.define('CE.constants.RenderFunctions', {
     singleton      : true,
-    renderAsPercent: function (value) {
+    renderAsValue  : function (value) {
         if (!Ext.isNumber(value)) {
             value = Ext.Number.from(value, 0.0);
         }
-        value = value * 100.0;
-        return Ext.String.format('{0} %', Ext.Number.toFixed(value, 2));
+        return Ext.Number.toFixed(value, 2);
+    },
+    renderAsPercent: function (value) {
+        return Ext.String.format('{0} %', this.renderAsValue(value * 100.0));
     }
 });

@@ -41,6 +41,30 @@ Ext.define('CE.view.calculation.CalculationResults', {
             items: [
                 {
                     xtype     : 'displayfield',
+                    itemId    : 'totalWork',
+                    fieldLabel: 'Praca całkowita',
+                    renderer  : function (value) {
+                        return CE.constants.RenderFunctions.renderAsValue(value);
+                    },
+                    flex      : 5
+                },
+                {
+                    xtype  : 'button',
+                    text   : '&#9830;',
+                    flex   : 1,
+                    handler: function () {
+                        Ext.Msg.show({
+                            title: 'Info',
+                            msg  : 'Całkowita praca w cyklu Carnot\'a'
+                        });
+                    }
+                }
+            ]
+        },
+        {
+            items: [
+                {
+                    xtype     : 'displayfield',
                     fieldLabel: '&#916;T',
                     value     : 0,
                     flex      : 5
