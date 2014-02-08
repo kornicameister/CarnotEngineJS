@@ -7,19 +7,9 @@ Ext.define('CE.constants.Carnot', {
     volume2        : 0,
     pressure       : 0,
     compression    : 0,
-    convertToKelvin: function (temp) {
-        if (!Ext.isNumber(temp)) {
-            temp = Ext.Number.from(temp);
-        }
-        console.log('Converting ' + temp + ' to Kelvins');
-        return {
-            celsius: temp,
-            kelvins: 273.15 + temp
-        };
-    },
     isValid        : function () {
-        var t1 = this['th']['kelvins'],
-            t2 = this['tl']['kelvins'];
+        var t1 = this['th'],
+            t2 = this['tl'];
         return t1 > t2;
     }
 });

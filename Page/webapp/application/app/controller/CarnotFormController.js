@@ -13,11 +13,7 @@ Ext.define('CE.controller.CarnotFormController', function () {
                             errorCode: '1'
                         })
                     }
-                    if (key === 'th' || key === 'tl') {
-                        CE.constants.Carnot[key] = CE.constants.Carnot.convertToKelvin(value);
-                    } else {
-                        CE.constants.Carnot[key] = Ext.isNumber(value) ? value : Ext.Number.from(value);
-                    }
+                    CE.constants.Carnot[key] = Ext.isNumber(value) ? value : Ext.Number.from(value);
                     console.log('CE.constants.Carnot[' + key + '] => ' + Ext.JSON.encode(CE.constants.Carnot[key]));
                 });
             }
