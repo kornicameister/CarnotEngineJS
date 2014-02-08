@@ -17,6 +17,14 @@ Ext.define('CE.model.Measurement', {
         {
             name: 'phase',
             type: 'string'
+        },
+        {
+            name: 'work',
+            type: 'number'
+        },
+        {
+            name: 'heat',
+            type: 'number'
         }
     ],
     proxy : {
