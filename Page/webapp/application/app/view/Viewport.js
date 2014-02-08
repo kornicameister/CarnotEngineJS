@@ -1,35 +1,31 @@
 Ext.define('CE.view.Viewport', {
-    extend : 'Ext.Viewport',
-    uses   : [
+    extend  : 'Ext.Viewport',
+    uses    : [
         'CE.view.CarnotAnimationPanel',
-        'CE.view.CarnotFormPanel'
+        'CE.view.CarnotNavigator'
     ],
-    layout : {
+    layout  : {
         type   : 'border',
         split  : true,
         padding: 5
     },
-    default: {
-        margins     : '5 0 0 5',
+    defaults: {
+        margins     : '5 5 5 5',
         bodyPadding : 5,
         monitorValid: true,
         autoScroll  : true
     },
-    items  : [
+    items   : [
         {
-            region : 'north',
-            html   : '<h1 class="x-panel-header">Carnot Engine Simulation</h1>',
-            border : true,
-            margins: '5 5 5 5'
+            region: 'north',
+            html  : '<h1 class="x-panel-header">Carnot Engine Simulation</h1>'
         },
         {
-            xtype      : 'carnotParams',
+            xtype      : 'carnotNavigator',
             region     : 'west',
-            title      : 'Parameters',
-            autoHeight : true,
-            bodyPadding: 5,
-            width      : 500,
-            collapsible: true
+            title      : 'Navigation',
+            collapsible: true,
+            width      : 250
         },
         {
             xtype : 'carnotAnimation',
