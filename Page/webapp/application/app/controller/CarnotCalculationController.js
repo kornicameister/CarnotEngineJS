@@ -1,9 +1,9 @@
 Ext.define('CE.controller.CarnotCalculationController', function () {
     var getEfficiency = function (th, tl) {
-            return 1 - tl['kelvins'] / th['kelvins'];
+            return 1 - tl / th;
         },
         getTotalWork = function (carnot) {
-            return carnot['mols'] * CE.constants.CarnotConstants.getIdealGasConstant()
+            return carnot['mols'] * CE.constants.CarnotConstants.getR()
                 * (carnot['th']['kelvins'] - carnot['tl']['kelvins'])
                 * Math.log(getVolumeInStep(carnot, 2) / getVolumeInStep(carnot, 1));
         },
@@ -13,7 +13,7 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
              */
             ISOTHERM : function (carnot, step) {
                 var mols = carnot['mols'],
-                    R = CE.constants.CarnotConstants.getIdealGasConstant(),
+                    R = CE.constants.CarnotConstants.getR(),
                     t = getTempInStep(carnot, step),
                     v1 = getVolumeInStep(carnot, step),
                     v2 = getVolumeInStep(carnot, step + 1);
@@ -22,9 +22,10 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             /**
              * @return {number}
              */
-            ADIABATIC: function () {
-                console.log('getWork in adiabatic change is always 0.0');
-                return 0.0;
+            ADIABATIC: function (carnot, step) {
+                return -carnot['mols']
+                    * CE.constants.CarnotConstants.getCV()
+                    * (getTempInStep(carnot, step) - getTempInStep(carnot, step + 1));
             }
         },
         getHeat = {
@@ -59,15 +60,20 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             ISOTHERM : function () {
                 return 0.0;
             },
+            /**
+             * @return {number}
+             */
             ADIABATIC: function (carnot, step) {
-                return getWork['ADIABATIC'].apply(this, [carnot, step]);
+                return carnot.mols
+                    * CE.constants.CarnotConstants.getCP()
+                    * (getTempInStep(carnot, step) * getTempInStep(carnot, step + 1));
             }
         },
         getTempInStep = function (carnot, step) {
             if (step % 2 === 0) {
-                return carnot['tl']['kelvins'];
+                return carnot['tl'];
             } else {
-                return carnot['th']['kelvins'];
+                return carnot['th'];
             }
         },
         getVolumeInStep = function (carnot, step) {
@@ -140,9 +146,9 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
                 var currentPhase = phasePerStep[step];
 
                 var record = new Measurement({
-                    th   : carnot.th.kelvins,
-                    tl   : carnot.tl.kelvins,
-                    phase: currentPhase,
+                    th   : carnot.th,
+                    tl   : carnot.tl,
+                    phase: Ext.String.format('{0} - {1}', step, currentPhase),
                     work : getWork[currentPhase].apply(me, [carnot, step]),
                     heat : getHeat[currentPhase].apply(me, [carnot, step]),
                     dU   : getDU[currentPhase].apply(me, [carnot, step]),

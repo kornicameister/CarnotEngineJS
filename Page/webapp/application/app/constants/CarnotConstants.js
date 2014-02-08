@@ -1,12 +1,18 @@
 Ext.define('CE.constants.CarnotConstants', {
-    singleton          : true,
-    getIdealGasConstant: function () {
+    singleton       : true,
+    getR            : function () {
         return 8.3144621;
     },
-    getIsothermName    : function () {
+    getCV           : function () {
+        return 12.5;
+    },
+    getCP           : function () {
+        return this.getCV() + this.getR();
+    },
+    getIsothermName : function () {
         return 'ISOTHERM';
     },
-    getAdiabaticName   : function () {
+    getAdiabaticName: function () {
         return 'ADIABATIC';
     }
 });
