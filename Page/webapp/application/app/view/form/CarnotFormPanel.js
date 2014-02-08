@@ -26,13 +26,13 @@ Ext.define('CE.view.form.CarnotFormPanel', {
             items     : [
                 {
                     itemId    : 'reservoir_t1',
-                    name      : 't1',
-                    fieldLabel: 'T1 (C)'
+                    name      : 'th',
+                    fieldLabel: 'T_H (C)'
                 },
                 {
                     itemId    : 'reservoir_t2',
-                    name      : 't2',
-                    fieldLabel: 'T2 (C)'
+                    name      : 'tl',
+                    fieldLabel: 'T_L (C)'
                 }
             ]
         },

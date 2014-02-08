@@ -1,7 +1,7 @@
 Ext.define('CE.constants.Carnot', {
     singleton      : true,
-    t1             : 0,
-    t2             : 0,
+    th             : 0,
+    tl             : 0,
     mols           : 0,
     volume         : 0,
     pressure       : 0,
@@ -16,8 +16,8 @@ Ext.define('CE.constants.Carnot', {
         };
     },
     isValid        : function () {
-        var t1 = this['t1']['kelvins'],
-            t2 = this['t2']['kelvins'];
+        var t1 = this['th']['kelvins'],
+            t2 = this['tl']['kelvins'];
         return t1 > t2;
     }
 });

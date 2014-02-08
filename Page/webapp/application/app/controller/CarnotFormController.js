@@ -13,7 +13,7 @@ Ext.define('CE.controller.CarnotFormController', function () {
                             errorCode: '1'
                         })
                     }
-                    if (key === 't1' || key === 't2') {
+                    if (key === 'th' || key === 'tl') {
                         CE.constants.Carnot[key] = CE.constants.Carnot.convertToKelvin(value);
                     } else {
                         CE.constants.Carnot[key] = Ext.isNumber(value) ? value : Ext.Number.from(value);
@@ -40,6 +40,7 @@ Ext.define('CE.controller.CarnotFormController', function () {
             this.getStartAnimationButton().disable();
             this.getStopAnimationButton().enable();
             this.getCarnotResults().expand();
+            this.getController('CarnotCalculationController').startCalculation();
         },
         onStopAnimation = function (button) {
             console.log('Stopping animation');

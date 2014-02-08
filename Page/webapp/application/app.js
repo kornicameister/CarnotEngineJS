@@ -6,7 +6,8 @@ Ext.onReady(function () {
         enableQuickTips   : true,
         autoCreateViewport: true,
         controllers       : [
-            'CarnotFormController'
+            'CarnotFormController',
+            'CarnotCalculationController'
         ],
         launch            : function () {
             Ext.state.Manager.setProvider(new Ext.state.LocalStorageProvider());
