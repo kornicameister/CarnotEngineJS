@@ -4,8 +4,8 @@
 
 Page/*.iml
 
-Page/lib/**/
-Page/css/**/
+Page/webapp/lib/**
+Page/webapp/css/**
 
 *.pydevproject
 .project
