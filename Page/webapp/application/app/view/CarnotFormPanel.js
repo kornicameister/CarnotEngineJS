@@ -66,12 +66,21 @@ Ext.define('CE.view.CarnotFormPanel', {
             itemId  : 'saveParameters',
             formBind: true
         },
+        {
+            text    : 'Reset',
+            itemId  : 'resetAll',
+            formBind: true
+        },
         '->',
         {
-            text   : 'Reset',
-            handler: function () {
-                this.up('form').getForm().reset();
-            }
+            text    : 'Start',
+            itemId  : 'startAnimation',
+            disabled: true
+        },
+        {
+            text    : 'Stop',
+            itemId  : 'stopAnimation',
+            disabled: true
         }
     ]
 });
