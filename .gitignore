@@ -4,6 +4,9 @@
 
 Page/*.iml
 
+Page/lib/**/
+Page/css/**/
+
 *.pydevproject
 .project
 .metadata

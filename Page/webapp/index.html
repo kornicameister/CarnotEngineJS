@@ -2,72 +2,14 @@
 <html>
 <head>
     <title>Carnot Engine - Simulation</title>
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/raphael-min.js"></script>
-    <script type="text/javascript" src="js/smoothie.js"></script>
-    <script type="text/javascript" src="js/Stats.js"></script>
-    <script type="text/javascript" src="js/app.js"></script>
-    <style>
-        #container {
-            height   : 100%;
-            overflow : hidden;
-            border   : 1px solid black;
-        }
+    <meta charset="UTF-8" lang="PL"/>
+    <script type="text/javascript" src="lib/extjs/ext-all-debug.js"></script>
+    <script type="text/javascript" src="lib/extjs/ext-lang-pl.js"></script>
+    <script type="text/javascript" src="lib/extjs/ext-theme-neptune.js"></script>
+    <link rel="stylesheet" media="all" href="css/extjs/ext-all-neptune.css"/>
 
-        section {
-            display  : inline-block;
-            float    : left;
-            overflow : hidden;
-        }
-
-        section#simulation {
-            width : 40%;
-        }
-
-        section#carnotEngine {
-        }
-
-        label:after {
-            content : ': ';
-        }
-    </style>
+    <script type="text/javascript" src="application/app.js"></script>
 </head>
 <body>
-<header>Carnot Engine Simulation</header>
-<div id="container">
-    <section id="simulation">
-        <!-- canvas will go here -->
-    </section>
-    <section id="carnotEngine">
-        <div id="parameters">
-            <table>
-                <tr>
-                    <td>
-                        <label for="source_1_temp">Source 1 Temp(K)</label><input id="source_1_temp" type="number" min="0" value="0"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="source_2_temp">Source 2 Temp(K)</label><input id="source_2_temp" type="number" min="0" value="0"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button type="button">Apply</button>
-                        <button type="button">Pause</button>
-                        <button type="button">Reset</button>
-                        <button type="button">Start</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div id="graphs">
-
-        </div>
-    </section>
-</div>
-<footer>
-    Tomasz Trębski
-</footer>
 </body>
 </html>
