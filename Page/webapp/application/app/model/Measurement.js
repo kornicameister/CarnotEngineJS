@@ -22,6 +22,14 @@ Ext.define('CE.model.Measurement', {
             type: 'number'
         },
         {
+            name: 'pressure',
+            type: 'number'
+        },
+        {
+            name: 'volume',
+            type: 'number'
+        },
+        {
             name: 'dU',
             type: 'number'
         },

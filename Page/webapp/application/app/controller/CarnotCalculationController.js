@@ -23,8 +23,8 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
              * @return {number}
              */
             ADIABATIC: function (carnot, step) {
-                return -carnot['mols']
-                    * CE.constants.CarnotConstants.getCV()
+                return carnot['mols']
+                    * carnot['cv']
                     * (getTempInStep(carnot, step) - getTempInStep(carnot, step + 1));
             }
         },
@@ -33,7 +33,7 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
              * @return {number}
              */
             ISOTHERM : function (carnot, step) {
-                return -getWork['ISOTHERM'].apply(this, [carnot, step]);
+                return getWork['ISOTHERM'].apply(this, [carnot, step]);
             },
             /**
              * @return {number}
@@ -47,8 +47,11 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
              * @return {number}
              */
             ISOTHERM : function () {
-                return 0.0;
+                return 0.0
             },
+            /**
+             * @return {number}
+             */
             ADIABATIC: function (carnot, step) {
                 return getWork['ADIABATIC'].apply(this, [carnot, step]);
             }
@@ -65,23 +68,19 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
              */
             ADIABATIC: function (carnot, step) {
                 return carnot.mols
-                    * CE.constants.CarnotConstants.getCP()
+                    * (carnot['cv'] + CE.constants.CarnotConstants.getR())
                     * (getTempInStep(carnot, step) * getTempInStep(carnot, step + 1));
             }
         },
         getTempInStep = function (carnot, step) {
-            if (step % 2 === 0) {
+            if (step % 2 !== 0) {
                 return carnot['tl'];
             } else {
                 return carnot['th'];
             }
         },
         getVolumeInStep = function (carnot, step) {
-            if (step % 2 !== 0) {
-                return carnot['volume1'];
-            } else {
-                return carnot['volume2'];
-            }
+            return carnot['volume' + step];
         };
     return  {
         extend          : 'Ext.app.Controller',
@@ -102,7 +101,7 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             {ref: 'measurementsGrid', selector: 'grid[itemId=measurementsGrid]'}
         ],
         statics         : {
-            TIME_STEP     : 500,
+            TIME_STEP     : 1500,
             PHASE_PER_STEP: {
                 1: 'ISOTHERM',
                 2: 'ADIABATIC',
@@ -121,6 +120,64 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             me.addEvents({
                 phaseCompleted: true,
                 loopCompleted : true
+            });
+
+            me.control({
+                'panel[itemId=charts]': {
+                    afterrender: function (panel) {
+                        panel.add({
+                            xtype      : 'chart',
+                            style      : 'background:#fff',
+                            animate    : true,
+                            shadow     : true,
+                            legend     : {
+                                position: 'left'
+                            },
+                            height     : 400,
+                            autoShow   : true,
+                            autoRefresh: true,
+                            autoRender : true,
+                            store      : me.getMeasurementsGrid().getStore(),
+                            axes       : [
+                                {
+                                    type          : 'Numeric',
+                                    minimum       : 0,
+                                    position      : 'left',
+                                    fields        : [ 'pressure', 'volume' ],
+                                    title         : 'P(10^5 Pa)',
+                                    minorTickSteps: 1,
+                                    grid          : {
+                                        odd: {
+                                            opacity       : 1,
+                                            fill          : '#ddd',
+                                            stroke        : '#bbb',
+                                            'stroke-width': 0.5
+                                        }
+                                    }
+                                },
+                                {
+                                    type    : 'Numeric',
+                                    position: 'bottom',
+                                    fields  : [ 'pressure', 'volume' ],
+                                    title   : 'V (m3)'
+                                }
+                            ],
+                            series     : [
+                                {
+                                    type        : 'line',
+                                    markerConfig: {
+                                        radius: 5,
+                                        size  : 5
+                                    },
+                                    axis        : 'left',
+                                    xField      : 'pressure',
+                                    yField      : 'volume',
+                                    color       : '#a00'
+                                }
+                            ]
+                        })
+                    }
+                }
             });
 
             console.log('Initialized CarnotCalculationController');
@@ -146,13 +203,15 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
                 var currentPhase = phasePerStep[step];
 
                 var record = new Measurement({
-                    th   : carnot.th,
-                    tl   : carnot.tl,
-                    phase: Ext.String.format('{0} - {1}', step, currentPhase),
-                    work : getWork[currentPhase].apply(me, [carnot, step]),
-                    heat : getHeat[currentPhase].apply(me, [carnot, step]),
-                    dU   : getDU[currentPhase].apply(me, [carnot, step]),
-                    dH   : getDH[currentPhase].apply(me, [carnot, step])
+                    th      : carnot.th,
+                    tl      : carnot.tl,
+                    pressure: carnot.pressure,
+                    volume  : getVolumeInStep(carnot, step),
+                    phase   : Ext.String.format('{0} - {1}', step, currentPhase),
+                    work    : getWork[currentPhase].apply(me, [carnot, step]),
+                    heat    : getHeat[currentPhase].apply(me, [carnot, step]),
+                    dU      : getDU[currentPhase].apply(me, [carnot, step]),
+                    dH      : getDH[currentPhase].apply(me, [carnot, step])
                 });
                 MeasurementStore.add(record);
 

@@ -14,6 +14,9 @@ Ext.define('CE.controller.CarnotFormController', function () {
                         })
                     }
                     CE.constants.Carnot[key] = Ext.isNumber(value) ? value : Ext.Number.from(value);
+                    if (key === 'volume1' || key === 'volume2') {
+                        CE.constants.Carnot[key] = CE.constants.Carnot[key] / 1000.0;
+                    }
                     console.log('CE.constants.Carnot[' + key + '] => ' + Ext.JSON.encode(CE.constants.Carnot[key]));
                 });
             }
@@ -21,26 +24,22 @@ Ext.define('CE.controller.CarnotFormController', function () {
                 Ext.Msg.alert('Invalid temperatures', 'T2 must be lower than T1 in order to run the cycle');
                 onResetAll(button);
             }
-            // enable start and stop
-            this.getStartAnimationButton().enable();
         },
         onResetAll = function (button) {
             console.log('Resetting animation');
             var form = button.up('form').getForm();
             form.reset();
-            this.getStartAnimationButton().disable();
             this.getStopAnimationButton().disable();
         },
         onStartAnimation = function (button) {
+            onSaveParameters(button);
             console.log('Starting animation');
-            this.getStartAnimationButton().disable();
             this.getStopAnimationButton().enable();
             this.getCarnotResults().expand();
             this.getController('CarnotCalculationController').startCalculation();
         },
         onStopAnimation = function (button) {
             console.log('Stopping animation');
-            this.getStartAnimationButton().enable();
             this.getStopAnimationButton().disable();
         };
 
@@ -55,7 +54,6 @@ Ext.define('CE.controller.CarnotFormController', function () {
         ],
         refs    : [
             {ref: 'resetButton', selector: 'carnotForm button[itemId=resetAll]'},
-            {ref: 'startAnimationButton', selector: 'carnotForm button[itemId=startAnimation]'},
             {ref: 'stopAnimationButton', selector: 'carnotForm button[itemId=stopAnimation]'},
             {ref: 'carnotForm', selector: 'carnotForm'},
             {ref: 'carnotResults', selector: 'carnotResults'}
@@ -63,7 +61,6 @@ Ext.define('CE.controller.CarnotFormController', function () {
         init    : function () {
             var me = this;
             me.control({
-                'carnotForm button[itemId=saveParameters]': {click: onSaveParameters},
                 'carnotForm button[itemId=resetAll]'      : {click: onResetAll},
                 'carnotForm button[itemId=startAnimation]': {click: onStartAnimation},
                 'carnotForm button[itemId=stopAnimation]' : {click: onStopAnimation}
