@@ -7,7 +7,6 @@ Ext.define('CE.constants.Carnot', {
     volume2    : 0,
     volume3    : 0,
     volume4    : 0,
-    pressure   : 0,
     compression: 0,
     cv         : 0,
     isValid    : function () {

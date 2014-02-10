@@ -1,12 +1,13 @@
 Ext.define('CE.view.CarnotAnimationPanel', function () {
     return {
-        extend  : 'Ext.panel.Panel',
+        extend  : 'Ext.tab.Panel',
         alias   : 'widget.carnotAnimation',
         uses    : [
             'CE.store.MeasurementsStore'
         ],
         layout  : {
-            type: 'hbox'
+            type: 'hbox',
+            pack: 'center'
         },
         defaults: {
             margin: '5 5 5 5'
@@ -15,7 +16,8 @@ Ext.define('CE.view.CarnotAnimationPanel', function () {
             {
                 xtype : 'container',
                 layout: 'anchor',
-                flex  : 2,
+                title : 'Silnik i pomiary',
+                flex  : 3,
                 items : [
                     {
                         xtype      : 'panel',
@@ -116,11 +118,17 @@ Ext.define('CE.view.CarnotAnimationPanel', function () {
                 ]
             },
             {
-                xtype : 'panel',
-                title : 'Charts',
-                itemId: 'charts',
-                layout: 'fit',
-                flex  : 1
+                xtype     : 'panel',
+                title     : 'Charts',
+                itemId    : 'charts',
+                layout    : 'fit',
+                autoScroll: true,
+                flex      : 2,
+                height    : 750,
+                defaults  : {
+                    padding: 10,
+                    margin : '0 0 0 0'
+                }
             }
         ]
     }

@@ -31,6 +31,10 @@ Ext.define('CE.view.form.CarnotFormPanel', {
                     text    : 'Reset',
                     itemId  : 'resetAll',
                     formBind: true
+                },
+                {
+                    text  : 'Example',
+                    itemId: 'exemplaryData'
                 }
             ]
         }
@@ -158,10 +162,6 @@ Ext.define('CE.view.form.CarnotFormPanel', {
                     {
                         name      : 'mols',
                         fieldLabel: 'N'
-                    },
-                    {
-                        name      : 'pressure',
-                        fieldLabel: 'Ciśnienie (10<sup>5</sup>Pa)'
                     }
                 ]
             }

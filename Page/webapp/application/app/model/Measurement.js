@@ -10,6 +10,10 @@ Ext.define('CE.model.Measurement', {
             type: 'number'
         },
         {
+            name: 'step',
+            type: 'number'
+        },
+        {
             name: 'phase',
             type: 'string'
         },

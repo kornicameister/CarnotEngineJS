@@ -7,6 +7,37 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
                 * (carnot['th']['kelvins'] - carnot['tl']['kelvins'])
                 * Math.log(getVolumeInStep(carnot, 2) / getVolumeInStep(carnot, 1));
         },
+        _getEnthalpy = function (mols, v1, v2) {
+            return -mols
+                * CE.constants.CarnotConstants.getR()
+                * Math.log(v1 / v2)
+        },
+        getEnthalpy = {
+            1: function (carnot) {
+                return {
+                    temperature: carnot['th'],
+                    enthalpy   : _getEnthalpy(carnot['mols'], getVolumeInStep(carnot, 2), getVolumeInStep(carnot, 1))
+                }
+            },
+            2: function (carnot) {
+                return {
+                    temperature: carnot['th'],
+                    enthalpy   : _getEnthalpy(carnot['mols'], getVolumeInStep(carnot, 3), getVolumeInStep(carnot, 2))
+                }
+            },
+            3: function (carnot) {
+                return {
+                    temperature: carnot['tl'],
+                    enthalpy   : getEnthalpy[2].apply(this, [carnot]).enthalpy
+                }
+            },
+            4: function (carnot) {
+                return {
+                    temperature: carnot['tl'],
+                    enthalpy   : getEnthalpy[1].apply(this, [carnot]).enthalpy
+                }
+            }
+        },
         getWork = {
             /**
              * @return {number}
@@ -72,8 +103,21 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
                     * (getTempInStep(carnot, step) * getTempInStep(carnot, step + 1));
             }
         },
+        getPressure = function (carnot, step) {
+            var temp = 0;
+            if (step == 1 || step === 2) {
+                temp = carnot['th'];
+            } else {
+                temp = carnot['tl'];
+            }
+            var top = (carnot['mols'] * CE.constants.CarnotConstants.getR() * temp);
+            var down = getVolumeInStep(carnot, step);
+            var number = top / down;
+            number = number / Math.pow(10, 5);
+            return  number;
+        },
         getTempInStep = function (carnot, step) {
-            if (step % 2 !== 0) {
+            if (step % 2 === 0) {
                 return carnot['tl'];
             } else {
                 return carnot['th'];
@@ -89,9 +133,13 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             'CE.constants.CarnotConstants',
             'CE.constants.Carnot',
             'CE.store.MeasurementsStore',
-            'CE.model.Measurement'
+            'CE.model.Measurement',
+            'CE.model.PStepChart',
+            'CE.model.PVChart',
+            'CE.model.TSChart',
+            'CE.view.chart.Charts'
         ],
-        models          : ['Measurement'],
+        models          : ['Measurement', 'PVChart', 'TSChart', 'PStepChart'],
         views           : [
             'CE.view.calculation.CalculationResults'
         ],
@@ -101,7 +149,7 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             {ref: 'measurementsGrid', selector: 'grid[itemId=measurementsGrid]'}
         ],
         statics         : {
-            TIME_STEP     : 1500,
+            TIME_STEP     : 2000,
             PHASE_PER_STEP: {
                 1: 'ISOTHERM',
                 2: 'ADIABATIC',
@@ -111,10 +159,27 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
         },
         config          : {
             animationRunning: true,
-            step            : 1
+            step            : 1,
+            pvStore         : undefined,
+            tsStore         : undefined,
+            pStepStore      : undefined
         },
         init            : function () {
             var me = this;
+
+            // init stores
+            me.setPvStore(Ext.create('Ext.data.Store', {
+                model   : 'CE.model.PVChart',
+                autoSync: true
+            }));
+            me.setTsStore(Ext.create('Ext.data.Store', {
+                model   : 'CE.model.TSChart',
+                autoSync: true
+            }));
+            me.setPStepStore(Ext.create('Ext.data.Store', {
+                model   : 'CE.model.PStepChart',
+                autoSync: true
+            }));
 
             // add events
             me.addEvents({
@@ -125,57 +190,9 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             me.control({
                 'panel[itemId=charts]': {
                     afterrender: function (panel) {
-                        panel.add({
-                            xtype      : 'chart',
-                            style      : 'background:#fff',
-                            animate    : true,
-                            shadow     : true,
-                            legend     : {
-                                position: 'left'
-                            },
-                            height     : 400,
-                            autoShow   : true,
-                            autoRefresh: true,
-                            autoRender : true,
-                            store      : me.getMeasurementsGrid().getStore(),
-                            axes       : [
-                                {
-                                    type          : 'Numeric',
-                                    minimum       : 0,
-                                    position      : 'left',
-                                    fields        : [ 'pressure', 'volume' ],
-                                    title         : 'P(10^5 Pa)',
-                                    minorTickSteps: 1,
-                                    grid          : {
-                                        odd: {
-                                            opacity       : 1,
-                                            fill          : '#ddd',
-                                            stroke        : '#bbb',
-                                            'stroke-width': 0.5
-                                        }
-                                    }
-                                },
-                                {
-                                    type    : 'Numeric',
-                                    position: 'bottom',
-                                    fields  : [ 'pressure', 'volume' ],
-                                    title   : 'V (m3)'
-                                }
-                            ],
-                            series     : [
-                                {
-                                    type        : 'line',
-                                    markerConfig: {
-                                        radius: 5,
-                                        size  : 5
-                                    },
-                                    axis        : 'left',
-                                    xField      : 'pressure',
-                                    yField      : 'volume',
-                                    color       : '#a00'
-                                }
-                            ]
-                        })
+                        panel.add(CE.view.chart.Charts.getPVChart(me.getPvStore()));
+                        panel.add(CE.view.chart.Charts.getTSChart(me.getTsStore()));
+                        panel.add(CE.view.chart.Charts.getPressureChart(me.getPStepStore()));
                     }
                 }
             });
@@ -188,10 +205,19 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
                 twField = me.getTotalWorkField(),
                 delay = CE.controller.CarnotCalculationController.TIME_STEP,
                 phasePerStep = CE.controller.CarnotCalculationController.PHASE_PER_STEP,
+            // models
                 Measurement = me.getMeasurementModel(),
+                PVChartModel = me.getPVChartModel(),
+                TSChartModel = me.getTSChartModel(),
+                PStepChartModel = me.getPStepChartModel(),
+            // models
                 carnot = CE.constants.Carnot,
                 grid = me.getMeasurementsGrid(),
-                MeasurementStore = grid.getStore();
+            // stores
+                MeasurementStore = grid.getStore(),
+                pStepStore = me.getPStepStore(),
+                pvStore = me.getPvStore(),
+                tsStore = me.getTsStore();
 
             effField.setValue(getEfficiency(CE.constants.Carnot['th'], CE.constants.Carnot['tl']));
             twField.setValue(getTotalWork(carnot));
@@ -205,7 +231,8 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
                 var record = new Measurement({
                     th      : carnot.th,
                     tl      : carnot.tl,
-                    pressure: carnot.pressure,
+                    step    : step,
+                    pressure: getPressure(carnot, step),
                     volume  : getVolumeInStep(carnot, step),
                     phase   : Ext.String.format('{0} - {1}', step, currentPhase),
                     work    : getWork[currentPhase].apply(me, [carnot, step]),
@@ -217,6 +244,18 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
 
                 grid.getSelectionModel().select(record);
                 grid.getView().focusRow(record);
+
+                // create records for charts and add to stores
+
+                pStepStore.add(new PStepChartModel({
+                    step    : step,
+                    pressure: getPressure(carnot, step)
+                }));
+                pvStore.add(new PVChartModel({
+                    pressure: getPressure(carnot, step),
+                    volume  : getVolumeInStep(carnot, step)
+                }));
+                tsStore.add(getEnthalpy[step].apply(me, [carnot]));
 
                 if (me.getAnimationRunning()) {
                     if (step === 4) {

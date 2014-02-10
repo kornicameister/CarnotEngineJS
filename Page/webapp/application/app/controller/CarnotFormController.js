@@ -14,7 +14,7 @@ Ext.define('CE.controller.CarnotFormController', function () {
                         })
                     }
                     CE.constants.Carnot[key] = Ext.isNumber(value) ? value : Ext.Number.from(value);
-                    if (key === 'volume1' || key === 'volume2') {
+                    if (key === 'volume1' || key === 'volume2' || key === 'volume3' || key === 'volume4') {
                         CE.constants.Carnot[key] = CE.constants.Carnot[key] / 1000.0;
                     }
                     console.log('CE.constants.Carnot[' + key + '] => ' + Ext.JSON.encode(CE.constants.Carnot[key]));
@@ -41,6 +41,17 @@ Ext.define('CE.controller.CarnotFormController', function () {
         onStopAnimation = function (button) {
             console.log('Stopping animation');
             this.getStopAnimationButton().disable();
+        },
+        onExemplaryData = function (button) {
+            var form = button.up('form');
+            form.down('field[name=th]').setValue(500);
+            form.down('field[name=tl]').setValue(100);
+            form.down('field[name=volume1]').setValue(200);
+            form.down('field[name=volume2]').setValue(750);
+            form.down('field[name=volume3]').setValue(800);
+            form.down('field[name=volume4]').setValue(250);
+            form.down('field[name=cv]').setValue(12.5);
+            form.down('field[name=mols]').setValue(10);
         };
 
     return  {
@@ -55,6 +66,7 @@ Ext.define('CE.controller.CarnotFormController', function () {
         refs    : [
             {ref: 'resetButton', selector: 'carnotForm button[itemId=resetAll]'},
             {ref: 'stopAnimationButton', selector: 'carnotForm button[itemId=stopAnimation]'},
+            {ref: 'exemplaryDataButton', selector: 'carnotForm button[itemId=exemplaryData]'},
             {ref: 'carnotForm', selector: 'carnotForm'},
             {ref: 'carnotResults', selector: 'carnotResults'}
         ],
@@ -62,6 +74,7 @@ Ext.define('CE.controller.CarnotFormController', function () {
             var me = this;
             me.control({
                 'carnotForm button[itemId=resetAll]'      : {click: onResetAll},
+                'carnotForm button[itemId=exemplaryData]' : {click: onExemplaryData},
                 'carnotForm button[itemId=startAnimation]': {click: onStartAnimation},
                 'carnotForm button[itemId=stopAnimation]' : {click: onStopAnimation}
             });
