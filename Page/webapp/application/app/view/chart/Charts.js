@@ -3,8 +3,8 @@ Ext.define('CE.view.chart.Charts', function () {
         return {
             xtype      : 'chart',
             style      : 'background:#fff',
-            animate    : false,
-            shadow     : false,
+            animate    : true,
+            shadow     : true,
             autoShow   : true,
             autoRefresh: true,
             autoRender : true,
@@ -17,6 +17,7 @@ Ext.define('CE.view.chart.Charts', function () {
             return Ext.apply({
                 itemId: 'pressureChart',
                 store : store,
+                title : 'P/Krok',
                 axes  : [
                     {
                         type          : 'Numeric',
@@ -56,6 +57,7 @@ Ext.define('CE.view.chart.Charts', function () {
             return Ext.apply({
                 itemId: 'tsChart',
                 store : store,
+                title : 'T/S',
                 axes  : [
                     {
                         type          : 'Numeric',
@@ -95,6 +97,7 @@ Ext.define('CE.view.chart.Charts', function () {
             return Ext.apply({
                 itemId: 'pvChart',
                 store : store,
+                title : 'P/V',
                 axes  : [
                     {
                         type          : 'Numeric',

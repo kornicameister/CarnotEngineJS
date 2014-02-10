@@ -188,7 +188,7 @@ Ext.define('CE.controller.CarnotCalculationController', function () {
             });
 
             me.control({
-                'panel[itemId=charts]': {
+                'panel[itemId=carnotAnimationPanel]': {
                     afterrender: function (panel) {
                         panel.add(CE.view.chart.Charts.getPVChart(me.getPvStore()));
                         panel.add(CE.view.chart.Charts.getTSChart(me.getTsStore()));

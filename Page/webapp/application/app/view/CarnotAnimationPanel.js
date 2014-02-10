@@ -2,6 +2,7 @@ Ext.define('CE.view.CarnotAnimationPanel', function () {
     return {
         extend  : 'Ext.tab.Panel',
         alias   : 'widget.carnotAnimation',
+        itemId  : 'carnotAnimationPanel',
         uses    : [
             'CE.store.MeasurementsStore'
         ],
@@ -116,19 +117,6 @@ Ext.define('CE.view.CarnotAnimationPanel', function () {
                         ]
                     }
                 ]
-            },
-            {
-                xtype     : 'panel',
-                title     : 'Charts',
-                itemId    : 'charts',
-                layout    : 'fit',
-                autoScroll: true,
-                flex      : 2,
-                height    : 750,
-                defaults  : {
-                    padding: 10,
-                    margin : '0 0 0 0'
-                }
             }
         ]
     }
